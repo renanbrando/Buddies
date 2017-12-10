@@ -1,0 +1,8 @@
+{
+  "name": "MyBuddies",
+  "app_id": "f22b20ba",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
