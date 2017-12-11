@@ -2,9 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
-import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
+import { AlertController } from 'ionic-angular/components/alert/alert-controller';
 
 @Component({
   templateUrl: 'app.html'
@@ -12,17 +10,20 @@ import { ListPage } from '../pages/list/list';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: string = 'ListPage';
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{ title: string, component: any, icon: string }>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public alertCtrl: AlertController) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'List', component: ListPage }
+      { title: 'Profile', component: "ProfilePage", icon: 'contact' },
+      { title: 'My Pets', component: "ListPage", icon: 'paw' },
+      { title: 'Hints', component: "HintsPage", icon: 'bulb' },
+      { title: 'Settings', component: "SettingsPage", icon: 'cog' },
+      { title: 'About', component: "AboutPage", icon: 'information-circle' },
     ];
 
   }
@@ -41,4 +42,29 @@ export class MyApp {
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
   }
+
+  logout() {
+    let alert = this.alertCtrl.create({
+      title: 'Exit',
+      message: 'Do you want to logout?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            console.log('Buy clicked');
+            this.nav.setRoot("LoginPage");
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
 }

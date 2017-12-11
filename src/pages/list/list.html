@@ -1,23 +1,58 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="dark">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>List</ion-title>
+    <ion-title>My Pets</ion-title>
+    <ion-buttons end>
+      <button ion-button navPush="AddPetPage">
+        <ion-icon name="add"></ion-icon>  
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
-      <ion-icon [name]="item.icon" item-start></ion-icon>
-      {{item.title}}
-      <div class="item-note" item-end>
-        {{item.note}}
-      </div>
-    </button>
+    <ion-list-header>
+      Pets
+    </ion-list-header>
+
+    <ion-item-sliding *ngFor="let pet of petList$ | async">
+      <ion-item (click)="goViewPage(pet)">
+        <h2>{{pet.name}}</h2>
+      </ion-item>
+      <ion-item-options side="right">
+
+        <button ion-button color="balanced" (click)="addPet()">
+          <ion-icon name="calendar"></ion-icon>
+            Event
+        </button>
+
+        <button navPush="EditPetPage" [navParams]="{pet:pet}" ion-button color="positive">
+          <ion-icon name="create"></ion-icon>
+            Edit
+        </button>
+
+        <button (click)="deletePet(pet)" ion-button color="assertive">
+          <ion-icon name="trash"></ion-icon>
+            Delete
+        </button>
+
+      </ion-item-options>
+    </ion-item-sliding>
+
   </ion-list>
-  <div *ngIf="selectedItem" padding>
-    You navigated here from <b>{{selectedItem.title}}</b>
-  </div>
+  <ion-fab right bottom>
+    <button ion-fab color="dark"><ion-icon name="add-circle"></ion-icon></button>
+    <ion-fab-list side="top">
+      <button (click)="goAddPage()" ion-fab><ion-icon name="add"></ion-icon></button>
+      <button (click)="addViaNFC()" ion-fab><ion-icon name="ios-radio-outline"></ion-icon></button>
+    </ion-fab-list>
+    <ion-fab-list side="left">
+      <button (click)="addViaBarcode()" ion-fab><ion-icon name="barcode"></ion-icon></button>
+      <button (click)="addViaSwap()" ion-fab><ion-icon name="swap"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+
 </ion-content>

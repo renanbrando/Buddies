@@ -1,37 +1,58 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Pet } from '../../models/Pet'
+import { PetListService } from '../../services/pet-list/pet-list.service';
+import { Observable } from 'rxjs/Observable';
+import { ToastService } from '../../services/toast/toast.service';
+import { AlertController } from 'ionic-angular/components/alert/alert-controller';
 
+@IonicPage()
 @Component({
   selector: 'page-list',
-  templateUrl: 'list.html'
+  templateUrl: 'list.html',
 })
 export class ListPage {
-  selectedItem: any;
-  icons: string[];
-  items: Array<{title: string, note: string, icon: string}>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    // If we navigated to this page, we will have an item available as a nav param
-    this.selectedItem = navParams.get('item');
-
-    // Let's populate this page with some filler content for funzies
-    this.icons = ['flask', 'wifi', 'beer', 'football', 'basketball', 'paper-plane',
-    'american-football', 'boat', 'bluetooth', 'build'];
-
-    this.items = [];
-    for (let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }
+  petList$: Observable<Pet[]>;
+  pet : Pet;
+ 
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public petService: PetListService, public toast: ToastService) {
+    this.petList$ = this.petService
+      .getPetList() // gets DB list
+      .snapshotChanges() // key and value
+      .map(
+        changes => {
+          return changes.map(c => ({
+            key: c.payload.key, ... c.payload.val()
+          }))
+        }
+      )
   }
 
-  itemTapped(event, item) {
-    // That's right, we're pushing to ourselves!
-    this.navCtrl.push(ListPage, {
-      item: item
+  deletePet(pet){
+    let alert = this.alertCtrl.create({
+      title: 'Confirm deletion',
+      message: `Are you sure you wanto to delete ${pet.name}?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.petService.removePet(pet).then(() => {
+              this.toast.show("Pet deleted.");
+              this.navCtrl.setRoot("ListPage");
+            });
+          }
+        }
+      ]
     });
+    alert.present(); 
   }
+
 }
