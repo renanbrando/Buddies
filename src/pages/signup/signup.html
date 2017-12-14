@@ -14,22 +14,22 @@
 
 
 <ion-content padding>
-  <ion-item>
+  <!-- <ion-item>
     <ion-label floating>Name</ion-label>
     <ion-input type="text" [(ngModel)]="name"></ion-input>
-  </ion-item>
+  </ion-item> -->
 
   <ion-item>
     <ion-label floating>Email</ion-label>
-    <ion-input type="email" [(ngModel)]="mail"></ion-input>
+    <ion-input type="email" [(ngModel)]="user.email"></ion-input>
   </ion-item>
 
-  <ion-item>
+ <!--  <ion-item>
     <ion-label floating>Birthdate</ion-label>
     <ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="birth"></ion-datetime>
-  </ion-item>
+  </ion-item> -->
 
-  <ion-item>
+  <!-- <ion-item>
     <ion-label floating>Gender</ion-label>
     <ion-select [(ngModel)]="gender">
       <ion-option value="f">Female</ion-option>
@@ -40,19 +40,19 @@
   <ion-item>
     <ion-label floating>Phone</ion-label>
     <ion-input type="tel"></ion-input>
-  </ion-item>
+  </ion-item> -->
 
   <ion-item>
     <ion-label floating>Password</ion-label>
-    <ion-input type="password" [(ngModel)]="password"></ion-input>
+    <ion-input type="password" [(ngModel)]="user.password"></ion-input>
   </ion-item>
 
-  <ion-item>
+  <!-- <ion-item>
     <ion-label floating>Confirm Password</ion-label>
     <ion-input type="password" [(ngModel)]="cpassword"></ion-input>
-  </ion-item>
+  </ion-item> -->
 
   <p margin>
-    <button ion-button full large color="dark" (click)="dismiss()">Register</button>
+    <button ion-button full large color="dark" (click)="dismiss(user)">Register</button>
   </p>
 </ion-content>

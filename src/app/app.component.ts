@@ -10,7 +10,7 @@ import { AlertController } from 'ionic-angular/components/alert/alert-controller
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: string = 'ListPage';
+  rootPage: string = 'LoginPage';
 
   pages: Array<{ title: string, component: any, icon: string }>;
 

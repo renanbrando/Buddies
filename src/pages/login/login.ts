@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ModalController } from 'ionic-angular/components/modal/modal-controller';
+import { User } from '../../models/User';
 
 /**
  * Generated class for the LoginPage page.
@@ -16,11 +17,13 @@ import { ModalController } from 'ionic-angular/components/modal/modal-controller
 })
 export class LoginPage {
 
-  username: string;
-  password: string;
+  user = {} as User;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) {
-  }
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public modalCtrl: ModalController
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
