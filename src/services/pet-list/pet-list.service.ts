@@ -5,11 +5,15 @@ import { Pet } from "../../models/Pet";
 @Injectable()
 export class PetListService{
 
-    private petListRef = this.db.list<Pet>
-    ('pet-list');
+    private petListRef = this.db.list<Pet>('pet-list');
 
     constructor(private db: AngularFireDatabase){
+    }
 
+    getPetsByUser(user: string){
+        let pets = this.db.list<Pet>('pet-list', ref => ref.orderByChild('owner_id').equalTo(user));
+        console.log(pets);
+        return pets;
     }
 
     getPetList(){

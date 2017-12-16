@@ -12,6 +12,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { FIREBASE_CONFIG } from './firebase.credentials';
 import { PetListService } from '../services/pet-list/pet-list.service';
 import { ToastService } from '../services/toast/toast.service';
+import { AuthProvider } from '../providers/auth/auth';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ToastService } from '../services/toast/toast.service';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     PetListService,
-    ToastService
+    ToastService,
+    AuthProvider
   ]
 })
 export class AppModule {}

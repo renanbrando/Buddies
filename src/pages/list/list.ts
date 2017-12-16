@@ -5,6 +5,9 @@ import { PetListService } from '../../services/pet-list/pet-list.service';
 import { Observable } from 'rxjs/Observable';
 import { ToastService } from '../../services/toast/toast.service';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
+import { AuthProvider } from '../../providers/auth/auth';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireList } from 'angularfire2/database/interfaces';
 
 @IonicPage()
 @Component({
@@ -16,9 +19,19 @@ export class ListPage {
   petList$: Observable<Pet[]>;
   pet : Pet;
  
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public petService: PetListService, public toast: ToastService) {
-    this.petList$ = this.petService
-      .getPetList() // gets DB list
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public alertCtrl: AlertController, 
+    public petService: PetListService, 
+    public toast: ToastService, 
+    private authService: AuthProvider,
+    private angularFireAuth: AngularFireAuth,
+  ) {
+
+    this.angularFireAuth.authState.subscribe(data => {
+      this.petList$ = this.petService
+      .getPetsByUser(data.email) // gets DB list
       .snapshotChanges() // key and value
       .map(
         changes => {
@@ -26,7 +39,8 @@ export class ListPage {
             key: c.payload.key, ... c.payload.val()
           }))
         }
-      )
+      );
+    })
   }
 
   deletePet(pet){

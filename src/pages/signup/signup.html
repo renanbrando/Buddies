@@ -14,45 +14,30 @@
 
 
 <ion-content padding>
-  <!-- <ion-item>
-    <ion-label floating>Name</ion-label>
-    <ion-input type="text" [(ngModel)]="name"></ion-input>
-  </ion-item> -->
+  <form #form="ngForm" novalidate>
+    <ion-list>
 
-  <ion-item>
-    <ion-label floating>Email</ion-label>
-    <ion-input type="email" [(ngModel)]="user.email"></ion-input>
-  </ion-item>
+      <ion-item>
+        <ion-label stacked>E-mail</ion-label>
+        <ion-input type="text" name="email" [(ngModel)]="user.email" #email="ngModel" required></ion-input>
+      </ion-item>
+      <ion-item *ngIf="email.errors && (email.dirty || email.touched)" class="text-danger">
+        Fill in the field
+      </ion-item>
 
- <!--  <ion-item>
-    <ion-label floating>Birthdate</ion-label>
-    <ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="birth"></ion-datetime>
-  </ion-item> -->
+      <ion-item>
+        <ion-label stacked>Password</ion-label>
+        <ion-input type="password" name="password" [(ngModel)]="user.password" #password="ngModel" required></ion-input>
+      </ion-item>
+      <ion-item *ngIf="password.errors && (password.dirty || password.touched)" class="text-danger">
+        Fill in the field
+      </ion-item>
 
-  <!-- <ion-item>
-    <ion-label floating>Gender</ion-label>
-    <ion-select [(ngModel)]="gender">
-      <ion-option value="f">Female</ion-option>
-      <ion-option value="m">Male</ion-option>
-    </ion-select>
-  </ion-item>
+    </ion-list>
 
-  <ion-item>
-    <ion-label floating>Phone</ion-label>
-    <ion-input type="tel"></ion-input>
-  </ion-item> -->
+    <button ion-button block color="dark" [disabled]="!form.form.valid" (click)="createAccount()">
+      Create Account
+    </button>
+  </form>
 
-  <ion-item>
-    <ion-label floating>Password</ion-label>
-    <ion-input type="password" [(ngModel)]="user.password"></ion-input>
-  </ion-item>
-
-  <!-- <ion-item>
-    <ion-label floating>Confirm Password</ion-label>
-    <ion-input type="password" [(ngModel)]="cpassword"></ion-input>
-  </ion-item> -->
-
-  <p margin>
-    <button ion-button full large color="dark" (click)="dismiss(user)">Register</button>
-  </p>
 </ion-content>

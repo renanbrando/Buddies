@@ -3,6 +3,7 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
+import { AuthProvider } from '../providers/auth/auth';
 
 @Component({
   templateUrl: 'app.html'
@@ -14,7 +15,13 @@ export class MyApp {
 
   pages: Array<{ title: string, component: any, icon: string }>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public alertCtrl: AlertController) {
+  constructor(
+    public platform: Platform, 
+    public statusBar: StatusBar, 
+    public splashScreen: SplashScreen, 
+    public alertCtrl: AlertController,
+    public authService: AuthProvider
+  ) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -59,7 +66,10 @@ export class MyApp {
           text: 'Yes',
           handler: () => {
             console.log('Buy clicked');
-            this.nav.setRoot("LoginPage");
+            this.authService.signOut().then(() => {
+              this.nav.setRoot("LoginPage");
+            });
+            
           }
         }
       ]
