@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { LocalNotifications } from '@ionic-native/local-notifications';
+import { PhonegapLocalNotification } from '@ionic-native/phonegap-local-notification';
 import { Pet } from '../../models/Pet';
 import { Event } from '../../models/Event';
 import { ToastService } from '../../services/toast/toast.service';
@@ -28,22 +28,15 @@ export class AddEventPage {
     public navParams: NavParams, 
     public petService: PetListService,
     public toast: ToastService,
-    private localNotifications: LocalNotifications
+    private localNotification: PhonegapLocalNotification
   ) {
     this.pet = this.navParams.get("pet");
     this.event = new Event();
-    this.localNotifications.registerPermission().then(res => {
-      console.log(res);
-    });
+    
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddEventPage');
-    this.localNotifications.schedule({
-      id: 1,
-      text: 'Single ILocalNotification',
-      data: 'test'
-    });
   }
 
   addEvent(){
@@ -57,8 +50,21 @@ export class AddEventPage {
       Number(this.event.date.slice(8,11)),
       Number(this.event.time.slice(0,2)),
       Number(this.event.time.slice(3.6)));
+      this.localNotification.requestPermission().then(
+        (permission) => {
+          if (permission === 'granted') {
+      
+            // Create the notification
+            this.localNotification.create('New Event', {
+              tag: 'message',
+              body: 'Event ' + this.event.description + ' created',
+              icon: '../../assets/imgs/logo.png'
+            });
+      
+          }
+        });
       // Schedule delayed notification
-      this.localNotifications.schedule({
+      /* this.localNotifications.schedule({
         text: 'Delayed ILocalNotification',
         at: new Date( Number(this.event.date.slice(0,4)),
                       Number(this.event.date.slice(5,7)),
@@ -68,7 +74,7 @@ export class AddEventPage {
                     ),
         led: 'FF0000',
         sound: null
-      });
+      }); */
       this.toast.show("Event created.");
       this.navCtrl.pop();
     });

@@ -31,4 +31,8 @@ export class PetListService{
     removePet(pet: Pet){
         return this.petListRef.remove(pet.key);
     }
+
+    removeAll(){
+        return this.petListRef.remove();
+    }
 }

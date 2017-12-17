@@ -39,7 +39,6 @@ export class AddPetPage {
   addPet(pet: Pet){
     this.angularFireAuth.authState.subscribe(data => {
       pet.owner_id = data.email;
-      pet.events.push({description: "hello", date: "2017-01-01", time: "08:00"});
       console.log(pet);
       this.petService.addPet(pet).then(ref => {
         console.log(ref.key);

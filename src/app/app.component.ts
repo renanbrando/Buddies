@@ -28,7 +28,7 @@ export class MyApp {
     this.pages = [
       { title: 'Profile', component: "ProfilePage", icon: 'contact' },
       { title: 'My Pets', component: "ListPage", icon: 'paw' },
-      { title: 'Hints', component: "HintsPage", icon: 'bulb' },
+      //{ title: 'Hints', component: "HintsPage", icon: 'bulb' },
       { title: 'Settings', component: "SettingsPage", icon: 'cog' },
       { title: 'About', component: "AboutPage", icon: 'information-circle' },
     ];

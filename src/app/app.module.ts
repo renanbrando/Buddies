@@ -13,8 +13,9 @@ import { FIREBASE_CONFIG } from './firebase.credentials';
 import { PetListService } from '../services/pet-list/pet-list.service';
 import { ToastService } from '../services/toast/toast.service';
 import { AuthProvider } from '../providers/auth/auth';
-import { LocalNotifications } from '@ionic-native/local-notifications';
-import { QRScanner } from '@ionic-native/qr-scanner';
+import { PhonegapLocalNotification } from '@ionic-native/phonegap-local-notification';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { NFC, Ndef } from '@ionic-native/nfc';
 
 @NgModule({
   declarations: [
@@ -35,8 +36,9 @@ import { QRScanner } from '@ionic-native/qr-scanner';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    LocalNotifications,
-    QRScanner,
+    PhonegapLocalNotification,
+    BarcodeScanner,
+    NFC, Ndef,
     PetListService,
     ToastService,
     AuthProvider

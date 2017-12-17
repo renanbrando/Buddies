@@ -6,7 +6,9 @@ import { Observable } from 'rxjs/Observable';
 import { ToastService } from '../../services/toast/toast.service';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { NFC, Ndef } from '@ionic-native/nfc';
+import { LoadingController } from 'ionic-angular/components/loading/loading-controller';
 
 @IonicPage()
 @Component({
@@ -17,15 +19,19 @@ export class ListPage {
 
   petList$: Observable<Pet[]>;
   pet: Pet;
+  loading: any;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertController,
+    public loadingCrtl: LoadingController,
     public petService: PetListService,
     public toast: ToastService,
     private angularFireAuth: AngularFireAuth,
-    private qrScanner: QRScanner
+    private barcodeScanner: BarcodeScanner,
+    private nfc: NFC,
+    private ndef: Ndef
   ) {
 
     this.angularFireAuth.authState.subscribe(data => {
@@ -68,35 +74,112 @@ export class ListPage {
     alert.present();
   }
 
-  addViaBarcode() {
-    // Optionally request the permission early
-    this.qrScanner.prepare()
-      .then((status: QRScannerStatus) => {
-        if (status.authorized) {
-          // camera permission was granted
+  addPetQR() {
+    this.barcodeScanner.scan().then((barcodeData) => {
+      if (!barcodeData.cancelled){
+        let qrPet: string[] = [];
+        let pet: Pet = new Pet();
+        // Success! Barcode data is here
+        console.log(barcodeData);
+        // Receives data from QR code and pass it to a pet object
+        qrPet = barcodeData.text.split("|");
+        pet.name = qrPet[0];
+        pet.gender = qrPet[1];
+        pet.birthdate = qrPet[2];
+        pet.species = qrPet[3];
+        pet.race = qrPet[4];
+        pet.color = qrPet[5];
+        pet.weight = Number(qrPet[6]);
+        pet.height = Number(qrPet[7]);
+  
+        // register pet with user's id
+        this.angularFireAuth.authState.subscribe(data => {
+          pet.owner_id = data.email;
+          console.log(pet);
+          this.petService.addPet(pet).then(ref => {
+            console.log(ref.key);
+            this.toast.show(`${pet.name} added.`);
+            this.navCtrl.setRoot("ListPage");
+          }); 
+        });
+      }
+     }, (err) => {
+         // An error occurred
+         let alert = this.alertCtrl.create({
+          title: 'Error',
+          subTitle: err,
+          buttons: ['Dismiss']
+        });
+        alert.present();
+     });
+  }
 
-          // start scanning
-          let scanSub = this.qrScanner.scan().subscribe((text: string) => {
-            console.log('Scanned something', text);
+  addViaNFC(){
+    var nfcRead = [];
+    let nfcPet: string[] = [];
+    let pet: Pet = new Pet();
+    this.loading = this.loadingCrtl.create({
+      content: 'Reading NFC tags...'
+    });
 
-            this.qrScanner.hide(); // hide camera preview
-            scanSub.unsubscribe(); // stop scanning
-          });
+    this.loading.present().then(()=>{
 
-          // show camera preview
-          this.qrScanner.show();
+      this.nfc.addNdefListener(() => {
+        console.log('successfully attached ndef listener');
+      }, (err) => {
+        console.log('error attaching ndef listener', err);
+      }).subscribe((event) => {
+        console.log('received ndef message. the tag contains: ', event.tag);
+        console.log('decoded tag id', this.nfc.bytesToHexString(event.tag.id));
+        nfcRead = event.tag.ndefMessage[0]["payload"];
+        console.log(this.nfc.bytesToString(nfcRead));
+        nfcPet = this.nfc.bytesToString(nfcRead).split("|");
+        pet.name = nfcPet[0];
+        pet.gender = nfcPet[1];
+        pet.birthdate = nfcPet[2];
+        pet.species = nfcPet[3];
+        pet.race = nfcPet[4];
+        pet.color = nfcPet[5];
+        pet.weight = Number(nfcPet[6]);
+        pet.height = Number(nfcPet[7]);
+        
+        let alert = this.alertCtrl.create({
+          title: 'Confirm import',
+          message: `Are you sure you wanto to import ${pet.name}?`,
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked');
+              }
+            },
+            {
+              text: 'Yes',
+              handler: () => {
+                this.angularFireAuth.authState.subscribe(data => {
+                  pet.owner_id = data.email;
+                  console.log(pet);
+                  this.petService.addPet(pet).then(ref => {
+                    console.log(ref.key);
+                    this.toast.show(`${pet.name} added.`);
+                    this.navCtrl.setRoot("ListPage");
+                  }); 
+                });
+              }
+            }
+          ]
+        });
+        alert.present();
+  
+      });
 
-          // wait for user to scan something, then the observable callback will be called
-
-        } else if (status.denied) {
-          // camera permission was permanently denied
-          // you must use QRScanner.openSettings() method to guide the user to the settings page
-          // then they can grant the permission from there
-        } else {
-          // permission was denied, but not permanently. You can ask for permission again at a later time.
-        }
-      })
-      .catch((e: any) => console.log('Error is', e));
+      setTimeout(()=>{
+        this.navCtrl.setRoot('ListPage');
+        this.loading.dismiss();
+      }, 10000);
+    });
+    
   }
 
 }
