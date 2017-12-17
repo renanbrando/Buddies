@@ -13,6 +13,8 @@ import { FIREBASE_CONFIG } from './firebase.credentials';
 import { PetListService } from '../services/pet-list/pet-list.service';
 import { ToastService } from '../services/toast/toast.service';
 import { AuthProvider } from '../providers/auth/auth';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+import { QRScanner } from '@ionic-native/qr-scanner';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { AuthProvider } from '../providers/auth/auth';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    LocalNotifications,
+    QRScanner,
     PetListService,
     ToastService,
     AuthProvider

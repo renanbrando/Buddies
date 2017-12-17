@@ -23,7 +23,7 @@
         <!--<img src="img/advance-card-bttf.png">-->
         <ion-card-content>
           <ion-icon name="time"></ion-icon>
-          <span>{{event.date}} | </span>
+          <span>{{event.date | date: 'dd/MM/yyyy'}} | </span>
           <span>{{event.time}}</span>
         </ion-card-content>
          <!--  <ion-row>
