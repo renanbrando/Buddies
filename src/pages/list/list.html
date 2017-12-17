@@ -24,7 +24,7 @@
       </ion-item>
       <ion-item-options side="right">
 
-        <button ion-button color="balanced" (click)="addPet()">
+        <button navPush="EventListPage" [navParams]="{pet:pet}" ion-button color="balanced">
           <ion-icon name="calendar"></ion-icon>
             Event
         </button>

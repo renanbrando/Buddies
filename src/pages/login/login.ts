@@ -6,6 +6,7 @@ import { User } from '../../models/User';
 import { AuthProvider } from '../../providers/auth/auth';
 import { ToastService } from '../../services/toast/toast.service';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 /**
  * Generated class for the LoginPage page.
@@ -29,11 +30,22 @@ export class LoginPage {
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
     private toast: ToastService,
-    private authService: AuthProvider
+    private authService: AuthProvider,
+    private angularFireAuth: AngularFireAuth
   ) { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
+  }
+
+  ionViewWillLoad(){
+    this.angularFireAuth.authState.subscribe(data => {
+      if (data){
+        this.navCtrl.setRoot("ListPage");
+      } else{
+        console.log("Not logged in.");
+      }
+    });
   }
 
   login() {

@@ -1,3 +1,5 @@
+import { Event } from "./Event";
+
 export class Pet
 {
   public key?: string;
@@ -10,6 +12,9 @@ export class Pet
   public weight: number;
   public height: number;
   public owner_id: string;
+  public events: Event[];
 
-  constructor()  {  }
+  constructor()  { 
+    this.events = [];
+   }
 }
