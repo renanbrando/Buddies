@@ -25,3 +25,7 @@ Ionic app that allows the user to manage his pets. The app is build using angula
 `ionic cordova build iOS`
 
 `ionic cordova run iOS`
+
+## Download the app for Android
+
+* [Amazon Store](https://www.amazon.com.br/dp/B078GHQ5BG/ref=cm_sw_r_udp_apa_J05nAbTSEGP6X) 
